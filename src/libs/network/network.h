@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/types.h>
@@ -17,6 +18,11 @@
 #define SOCKET int
 #define INVALID_SOCKET -1
 #define _sock_init()
+#define _sock_nonblock(sockfd)                      \
+    {                                              \
+        int flags = fcntl(sockfd, F_GETFL, 0);     \
+        fcntl(sockfd, F_SETFL, flags | O_NONBLOCK); \
+    }
 #define _sock_exit()
 #define _sock_err() errno
 #define _sock_close(sockfd) ::close(sockfd)
